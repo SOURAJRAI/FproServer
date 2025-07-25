@@ -9,6 +9,8 @@ const isAuth = (req, res, next) => {
     res.status(400).json({ message: "Unauthorized Access. Please Login." });
   }
 };
+
+
 const isAdminForDashboard=async(req,res,next)=>{
       const { email }=req.session.user;
       const user= await Users.findOne({email})
@@ -26,10 +28,7 @@ const isAdminForDashboard=async(req,res,next)=>{
 const IsAdmin = async (req, res) => {
   try {
     const sessionUser = req.session.user;
-    if (!sessionUser) {
-      return res.status(401).json({ message: "No session found" });
-    }
-
+   
     console.log("Session User", sessionUser);
     const currentUser = await Users.findOne({ _id: sessionUser.id });
     
@@ -55,24 +54,14 @@ const IsAdmin = async (req, res) => {
     }
   } catch (err) {
     console.error("Admin check error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message2: "Server error" });
   }
 };
 
-//   if (req.session.user && req.session.user.Privilage === true) {
-//     return res.json({ message: "Admin Logged In" });
-//   } else {
-//     return res.status(403).json({user:req.session.user, message: "Not an admin" });
-//   }
-
-// } catch (err) {
-//   console.error("Admin check error:", err);
-//   return res.status(500).json({ message: "Server error" });
-// }
 
 const isAuthenticated = async (req, res) => {
   try {
-    // Check if the session exists in the database
+
     const session = await mongoose.connection.db
       .collection("MySession")
       .findOne({ _id: req.sessionID });
