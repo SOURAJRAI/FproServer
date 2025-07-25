@@ -9,6 +9,19 @@ const isAuth = (req, res, next) => {
     res.status(400).json({ message: "Unauthorized Access. Please Login." });
   }
 };
+const isAdminForDashboard=async(req,res,next)=>{
+      const { email }=req.session.user;
+      const user= await Users.findOne({email})
+      
+      console.log("inside Admin Dashboard check");
+      console.log("inside Admin Dashboard check",user);
+      if(user.Privilage)
+      {
+        next();
+      }else{
+        return res.status(400).json({message:"Not A Admin"});
+      }
+} 
 
 const IsAdmin = async (req, res) => {
   try {
@@ -24,7 +37,6 @@ const IsAdmin = async (req, res) => {
 
     console.log("Current User", currentUser);
 
-    // Check if privileges have changed
     if (currentUser.Privilage !== sessionUser.Privilage) {
       req.session.destroy((err) => {
         if (err) {
@@ -37,9 +49,9 @@ const IsAdmin = async (req, res) => {
         });
       });
     } else if (currentUser.Privilage === true) {
-      return res.json({ message: "Admin access granted" });
+      return res.json({ message: "Admin access granted",user:req.session.user });
     } else {
-      return res.status(403).json({ message: "Not an admin" });
+      return res.json({ message: "Not an admin" ,user:req.session.user });
     }
   } catch (err) {
     console.error("Admin check error:", err);
@@ -129,6 +141,7 @@ const LoginController = async (req, res) => {
 
     req.session.user = {
       id: user._id,
+      username:user.username,
       email: user.email,
       Privilage: user.Privilage,
     };
@@ -162,4 +175,5 @@ module.exports = {
   LoginController,
   logoutController,
   IsAdmin,
+  isAdminForDashboard
 };

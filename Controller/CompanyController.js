@@ -7,6 +7,13 @@ const GetAllCompanies = async (req, res) => {
     .catch((err) => res.json(err));
 };
 
+const GetDashboardData = async (req, res) => {
+  await companyModel
+    .find()
+    .then((data) => res.send({ data, user: req.session.email }))
+    .catch((err) => res.json(err));
+};
+
 const addController = async (req, res) => {
   console.log(req.body);
 
@@ -32,6 +39,7 @@ const deleteController = (req, res) => {
 
 module.exports = {
   GetAllCompanies,
+  GetDashboardData,
   addController,
   deleteController,
 };

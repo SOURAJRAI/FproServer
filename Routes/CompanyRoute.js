@@ -5,11 +5,13 @@ const {
   GetAllCompanies,
   addController,
   deleteController,
+  GetDashboardData,
 } = require("../Controller/CompanyController");
-const {isAuth}=require("../Controller/AuthController");
+const {isAuth,  isAdminForDashboard}=require("../Controller/AuthController");
 
 
 router.get("/GetAllCompanies",isAuth,GetAllCompanies);
+router.get("/GetDashboardData",isAdminForDashboard,GetDashboardData);
 router.post("/add",addController);
 router.delete("/delete/:id",deleteController);
 
